@@ -1,116 +1,108 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Expense tracker app</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  </head>
+    <title>Expense Tracker App</title>
+    <link rel="stylesheet" href="expense.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
+
 <body>
-  <div style="margin: 10%;">
+   
+    <div class="container">
+        <h1 class="text-center">Expense Tracker App</h1>
 
-  
+        <div class="form-group">
+            <label for="amount-input">Expense Amount:</label>
+            <input type="number" id="amount-input" aria-label="Enter expense amount">
 
-<form onsubmit="handleSubmit(event)" id="myForm">
+            <label for="description-input">Description:</label>
+            <input type="text" id="description-input" placeholder="Enter description">
 
-  <input type="hidden" id="expenseId" name="expenseId">
-    <div class="row g-3">
-        <div class="col">
-          <input type="number"  class="form-control" placeholder="Enter Expense Amount" id="expenseAmount">
+            <label for="category-select">Category:</label>
+            <select id="category-select">
+                <option value="Food & Beverage">Food & Beverage</option>
+                <option value="Fuel">Fuel</option>
+                <option value="Transport">Transport</option>
+                <option value="Salary">Salary</option>
+                <option value="Movie">Movie</option>
+            </select>
+            <button id="add-expense" class="btn btn-success">Add Expense</button>
         </div>
-        <div class="col">
-          <input type="text"  class="form-control" placeholder="Description" id="Description" >
+
+        <div class="premium-btn-container text-center">
+            <button id="purchase-premium" class="purchase-btn btn btn-warning">
+                Purchase Premium Membership
+            </button>
+            <button id="purchase" style="display: none;" class="btn btn-primary">
+                🌟You are a Premium User🌟
+            </button>
         </div>
 
-          
-          
-      </div>
-
-      <div style="margin: 30px;">
-        <select class="form-select form-select-lg mb-3"  id="type">
-            <option selected>Select Type</option>
-            <option value=Food>Food</option>
-            <option value=Movie>Movie</option>
-            <option value=Pertol>Pertol</option>
-            <option value=Bills>Bills</option>
-          </select>
-          <input class="btn btn-primary" style="display: none;" id="addbtn" type="submit" value="Add Expense"/>
-          <button id="rzp-button"  class="btn btn-primary" onclick="handlePurchase(event)" value="Buy Premium">Buy Premium</button>
-      <button  id="purchase" style="display: none;"   class="btn btn-primary">You are Premium User </button>
-      <button  id="leaderboard" style="display: none;"  onclick="showLeaderboard(event)" class="btn btn-primary">Show Leaderboard</button>
-      <button  id="download" style="display: none;"  onclick="handleDownload(event)" class="btn btn-primary">Download</button>
+      
+        <div class="leaderboard-container">
+            <h2>Leaderboard</h2>
+            <input id="show-leaderboard-btn" class="btn btn-info" type="button" value="Show Leaderboard">
+            <table class="leaderboard-table table">
+                <thead>
+                    <tr class="leaderboard-1">
+                        <th>Rank</th>
+                        <th>Username</th>
+                        <th>Total Expense</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-list"></tbody>
+            </table>
         </div>
-  
-</form>
+
+        <div style="margin: 30px;">
+            <h2>Expenses</h2>
+            <div>
+                <label for="rowsPerPage">Rows per page:</label>
+                <select id="rowsPerPage" class="form-select form-select-sm" >
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Expense Amount</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="expense-list"></tbody>
+            </table>
+
+            <div class="button-container">
+                <button id="prevPageBtn">Previous</button>
+                <p id="pagination-info"></p>
+                <button id="nextPageBtn">Next</button>
+              </div>
+
+        <div class="text-center">
+            <button id="download-expenses" class="btn btn-secondary" >
+              <i class="fa-solid fa-download"></i>  Download Expenses
+            </button>
+        </div>
+    </div>
+
+    <table id="ui2"></table>
+    <button id="refresh-history-btn">Refresh Download History</button>
 
 
 
-<div style="margin: 30px;">
-  <h2>Expenses</h2>
-  <div>
-    <label for="rowsPerPage">Rows per page:</label>
-    <select id="rowsPerPage" class="form-select form-select-sm" onchange="updateRowsPerPage()">
-      <option value="5">5</option>
-      <option value="10">10</option>
-      <option value="25">25</option>
-      <option value="50">50</option>
-      <option value="100">100</option>
-    </select>
-  </div>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Expense Amount</th>
-        <th scope="col">Description</th>
-        <th scope="col">Expense Type</th>
-        <th scope="col">Delete</th>
-        <th scope="col">Edit Type</th>
-      </tr>
-    </thead>
-    <tbody id="ui">
-    </tbody>
-  </table>
-  <div class="pagination">
-    <button id="prev" class="btn btn-primary" onclick="prevPage()">Previous</button>
-    <button id="next" class="btn btn-primary" onclick="nextPage()">Next</button>
-  </div>
-</div>
-
-
-<div id="leader" style=" display:none;">
-  <h2>Leaderboard</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Total Expense</th>
-      </tr>
-    </thead>
-    <tbody id="ui1">
-    </tbody>
-  </table>
-</div>
-
-<div id="history" style=" display:unset;">
-  <h2>Downloaded History</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Sr.No</th>
-        <th scope="col">Link</th>
-      </tr>
-    </thead>
-    <tbody id="ui2">
-    </tbody>
-  </table>
-</div>
-
-</div>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="expense.js"></script>
 </body>
 </html>

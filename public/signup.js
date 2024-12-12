@@ -1,34 +1,43 @@
+const signUpForm = document.getElementById("sign-up-form");
+const errorMsg = document.getElementById('error');
+const usernameInput = document.getElementById('username');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const messageElement = document.getElementById('message');
 
-document.getElementById('form').addEventListener('submit', handleSignUp);
+const clearForm = () => {
+    usernameInput.value = "";
+    emailInput.value = "";
+    passwordInput.value = "";
+    errorMsg.textContent = ''; 
+};
 
-function handleSignUp(e)
-{
-    e.preventDefault();
-    const email=document.getElementById('email').value;
-    const phone=document.getElementById('phone').value;
-    const password=document.getElementById('password').value;
-    const name=document.getElementById('name').value;
+signUpForm.addEventListener('submit', async(event) => {
+    event.preventDefault();
 
-    //console.log(email+phone+password);
-    const user={
-        email:email,
-        phone:phone,
-        password:password,
-        name:name
+    const username = usernameInput.value;
+    const email = emailInput.value;
+    const password = passwordInput.value;
+
+    try {
+        const response = await axios.post('http://localhost:3000/user/signup', { username, email, password });
+
+        clearForm();
+        if (response.status === 201) {
+            messageElement.textContent = 'User registered successfully.';
+        } else if (response.status === 409) {
+            messageElement.textContent = 'User already exists.';
+        } else {
+            messageElement.textContent = 'An error occurred.';
+        }
+
+    } catch (error) {
+        clearForm();
+        if (error.response && error.response.data && error.response.data.message) {
+            errorMsg.textContent = `Error: ${error.response.data.message}`;
+        } else {
+            console.log('Error adding user:', error);
+        
+        }
     }
-    console.log(user);
-    axios.post("http://localhost:5000/user/signup",user)
-    .then(r=>{
-       console.log(r.data);
-        const p=document.getElementById('p');
-        p.innerText=r.data.message;
-       window.location.href="http://localhost:5000/login.html";
-    })
-    .catch(e=>{
-        const p=document.getElementById('p');
-      
-        p.innerText=e.data.message;
-    })
-
-
-}
+});
