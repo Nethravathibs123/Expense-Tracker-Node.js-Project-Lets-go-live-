@@ -1,6 +1,4 @@
 
-
-// DOM Elements
 const elements = {
   expenseList: document.getElementById('expense-list'),
   addExpenseButton: document.getElementById('add-expense'),
